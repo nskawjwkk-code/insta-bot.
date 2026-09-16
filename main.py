@@ -13,7 +13,7 @@ app = Flask('')
 
 @app.route('/')
 def home():
-    return "BOT V6.0 ONLINE"
+    return "BOT V7.0 ONLINE"
 
 def run_flask():
     app.run(host='0.0.0.0', port=8080)
@@ -24,21 +24,32 @@ threading.Thread(target=run_flask, daemon=True).start()
 # 2. إعدادات الحساب
 # ==========================================
 USERNAME = "zalsj.20"
-# ⚠️ الباسورد يقرا من Environment Variables (في Render)
-PASSWORD = "Abdou20"
+PASSWORD = os.getenv("IG_PASSWORD", "Abdou20")
 
 # ⚠️ الأدمينة
 ADMINS = ["bat.2541453"]
 
 # ==========================================
-# 3. تشغيل البوت
+# 3. تشغيل البوت (مع Session)
 # ==========================================
 cl = Client()
 cl.delay_range = [1, 3]
 
+SESSION_FILE = "session.json"
+
 try:
-    cl.login(USERNAME, PASSWORD)
-    print(f"✅ تم تسجيل الدخول بحساب: {USERNAME}")
+    # إذا كان ملف Session موجود، نستعملوه
+    if os.path.exists(SESSION_FILE):
+        print("📂 راهو يقرا الـ Session المحفوظة...")
+        cl.load_settings(SESSION_FILE)
+        cl.login(USERNAME, PASSWORD)
+        print(f"✅ تم تسجيل الدخول من الـ Session: {USERNAME}")
+    else:
+        # أول مرة: نسجل دخول عادي
+        print("🔑 أول مرة: راهو يسجل دخول جديد...")
+        cl.login(USERNAME, PASSWORD)
+        cl.dump_settings(SESSION_FILE)
+        print(f"✅ تم تسجيل الدخول وحفظ الـ Session: {USERNAME}")
 except Exception as e:
     print(f"❌ فشل تسجيل الدخول: {e}")
     exit()
@@ -101,7 +112,7 @@ AUTO_REPLIES = {
 
 HELP_TEXT = """
 ╭─━━━━━━━━━━━━━─╮
-   🤖 **BOT V6.0** 🤖
+   🤖 **BOT V7.0** 🤖
 ╰─━━━━━━━━━━━━━─╯
 
 📌 **للجميع:**
@@ -238,7 +249,7 @@ def handle(text, thread_id, sender, sender_id, reply_user=None, reply_user_id=No
 # ==========================================
 # 7. لوب المراقبة
 # ==========================================
-print("🚀 البوت V6.0 راهو خدام...")
+print("🚀 البوت V7.0 راهو خدام...")
 last_seen = {}
 
 while True:
@@ -248,7 +259,6 @@ while True:
             if not thread.messages:
                 continue
 
-            # مراقبة الحماية
             if thread.id in settings["protected_groups"]:
                 original_name = settings["protected_groups"][thread.id]
                 if thread.thread_title != original_name:
