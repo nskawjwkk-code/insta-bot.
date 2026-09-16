@@ -13,7 +13,7 @@ app = Flask('')
 
 @app.route('/')
 def home():
-    return "BOT V7.0 ONLINE"
+    return "BOT V8.0 ONLINE"
 
 def run_flask():
     app.run(host='0.0.0.0', port=8080)
@@ -38,20 +38,21 @@ cl.delay_range = [1, 3]
 SESSION_FILE = "session.json"
 
 try:
-    # إذا كان ملف Session موجود، نستعملوه
+    # 1. إذا كان ملف Session موجود، نستعملوه
     if os.path.exists(SESSION_FILE):
         print("📂 راهو يقرا الـ Session المحفوظة...")
         cl.load_settings(SESSION_FILE)
         cl.login(USERNAME, PASSWORD)
         print(f"✅ تم تسجيل الدخول من الـ Session: {USERNAME}")
     else:
-        # أول مرة: نسجل دخول عادي
+        # 2. أول مرة: نسجل دخول عادي
         print("🔑 أول مرة: راهو يسجل دخول جديد...")
         cl.login(USERNAME, PASSWORD)
         cl.dump_settings(SESSION_FILE)
         print(f"✅ تم تسجيل الدخول وحفظ الـ Session: {USERNAME}")
 except Exception as e:
     print(f"❌ فشل تسجيل الدخول: {e}")
+    print("⚠️ ملاحظة: إذا كان الخطأ 'missing code_entry context_data'، معناها الحساب محبوس من إنستغرام، ولازم Session.")
     exit()
 
 # ==========================================
@@ -112,7 +113,7 @@ AUTO_REPLIES = {
 
 HELP_TEXT = """
 ╭─━━━━━━━━━━━━━─╮
-   🤖 **BOT V7.0** 🤖
+   🤖 **BOT V8.0** 🤖
 ╰─━━━━━━━━━━━━━─╯
 
 📌 **للجميع:**
@@ -249,7 +250,7 @@ def handle(text, thread_id, sender, sender_id, reply_user=None, reply_user_id=No
 # ==========================================
 # 7. لوب المراقبة
 # ==========================================
-print("🚀 البوت V7.0 راهو خدام...")
+print("🚀 البوت V8.0 راهو خدام...")
 last_seen = {}
 
 while True:
